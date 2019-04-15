@@ -73,7 +73,7 @@ EBYTE::EBYTE(Stream *s, uint8_t PIN_M0, uint8_t PIN_M1, uint8_t PIN_AUX, unsigne
 
 /*
 
-Initialize the unit--basicall this reads the modules parameters and stores the parameters
+Initialize the unit--basically this reads the modules parameters and stores the parameters
 for potential future module programming
 
 */
@@ -166,7 +166,7 @@ uint8_t EBYTE::GetByte() {
 Method to send a chunk of data provided data is in a struct--my personal favorite as you 
 need not parse or worry about sprintf() inability to handle floats
 
-TTP: put your structure definition into a .h file and include in both the sender and reciever
+TTP: put your structure definition into a .h file and include in both the sender and receiver
 sketches
 
 NOTE: of your sender and receiver MCU's are different (Teensy and Arduino) caution on the data
@@ -310,7 +310,7 @@ void EBYTE::SmartDelay(unsigned long timeout) {
 
 /*
 
-ya get in a bind and can't remember the factory defaults, call this
+you get in a bind and can't remember the factory defaults, call this
 NOTE: EBYTE modules for 100mW, 500mW and 1W will have different defaults
 Per the data sheet just send 3x 0x4C to the unit
 you will need to chanage mainly the Air data rate and power options--see the .h file
