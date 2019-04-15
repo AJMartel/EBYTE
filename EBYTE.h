@@ -39,31 +39,51 @@
   Usage of this library consumes around 970 bytes
 
   Revision		Data		Author			Description
-  1.0			3/6/2019	Kasprzak		Initial creation
+  1.0			6/3/2019	Kasprzak		Initial creation
+  1.1			15/4/2019	AJMartel		Documentation Fix
   
 
   Module connection
   Module	MCU						Description
-  MO		Any digital pin*		pin to control working/program modes
+  M0		Any digital pin*		pin to control working/program modes
   M1		Any digital pin*		pin to control working/program modes
-  Rx		Any digital pin			pin to MCU TX pin (module transmits to MCU, hence MCU must recieve data from module
-  Tx		Any digital pin			pin to MCU RX pin (module transmits to MCU, hence MCU must recieve data from module
+  RXD		Any digital pin			pin to MCU TX pin (module transmits to MCU, hence MCU must recieve data from module
+  TXD		Any digital pin			pin to MCU RX pin (module transmits to MCU, hence MCU must recieve data from module
   AUX		Any digital pin			pin to indicate when an operation is complete (low is busy, high is done)
-  Vcc		+3v3 or 5V0				
-  Vcc		Ground					Ground must be common to module and MCU		
+  VCC		+3v3 or 5V0				
+  GND		Ground				Ground must be common to module and MCU		
 
   notes:
   * caution in connecting to Arduino pin 0 and 1 as those pins are for USB connection to PC
-  you may need a 4K7 pullup to Rx and AUX pins (possibly Tx) if using and Arduino
-
+  you may need a 4K7 pullup to RXD, TXD and AUX pins when using and Arduino at 5V.
+  
+  E32 915T30D	Circuit		ARDUINO MEGA
+  M0		<----------->	Digital pin
+  M1		<----------->	Digital pin
+  RXD		<---4.7K---->	TX(1,2,3)
+  TXD		<---4.7K---->	RX(1,2,3)
+  AUX		<----------->	Analog pin
+  VCC		<----------->	5V
+  GND		<----------->	GND
+  
+  * Mode		M1	M0	Explanation
+    Normal		0	0	UART and wireless channel is good to go
+    Wake-Up		0	1	Same as normal but a preamble code is added to transmitted data for waking-up the receiver.
+    Power-Saving	1	0	UART is disable and wireless is on WOR(wake on radio) mode which means the device will turn on when there is data to be received. Transmission is not allowed.
+    Sleep		1	1	Used in setting parameters. Transmitting and receiving disabled.
+    
+  * The AUX pin serves as a flag for checking if the data has been sent or when data have been received. It’s also used to check if the module is still in self-check procedure which happens during power-on and exit from sleep mode.
+    When the module is idle, the AUX pin stays high. If there is data is to be sent, the AUX pin stays low 2-3 ms prior to the data being sent to the transmit buffer. The AUX pin goes back to high if the transmit buffer is clear (i.e., the data has been sent wirelessly). Similarly, the AUX pin goes low when there is data on the receive buffer.
+  
   Module source
   http://www.ebyte.com/en/
-  example module this library is intended to be used with
+  example module this library is intended to be used with "E32 915T30D"
   http://www.ebyte.com/en/product-view-news.aspx?id=174
+  https://www.teachmemicro.com/e32-ttl-100-sx1278-lora-module/
 
   Code usage
   1. Create a serial object
-  2. Create EBYTE object that uses the serail object
+  2. Create EBYTE object that uses the serial object
   3. begin the serial object
   4. init the EBYTE object
   5. set parameters (optional but required if sender and reciever are different)
